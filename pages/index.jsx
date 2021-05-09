@@ -12,21 +12,26 @@ export default function Home() {
 
   useEffect(() => {
     updatePosts(section);
-  }, [section]);
+  }, []);
 
   //in order to show the news fast to the user, the app does not
   //get all the publications in one go, instead, it only show 20 and then
   //gets the remaining as a  side process
-  const updatePosts = async (section) => {
-    const firstPosts = await getFirstPosts(section);
+  const updatePosts = async (lcSection) => {
+    const firstPosts = await getFirstPosts(lcSection);
+    if (section === lcSection) {
+      console.log("equal");
+    }
     setPosts(firstPosts);
-    const remainingPosts = await getRemainingPosts();
-    console.log(posts); //this gives null
-    setPosts([...firstPosts, ...remainingPosts]);
+    // const remainingPosts = await getRemainingPosts();
+    // console.log(posts); //this gives null
+    // setPosts([...firstPosts, ...remainingPosts]);
   };
 
   const changeSection = (newSec) => {
+    setPosts(null);
     setSection(newSec);
+    updatePosts(newSec);
   };
 
   console.log("outside", posts);

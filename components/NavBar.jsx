@@ -13,19 +13,26 @@ function NavBar({ section, changeSection }) {
   return (
     <nav className=" w-full bg-primary dark:bg-primary-dark ">
       <div className="flex justify-end items-center p-2 ">
-        <label className="dark:text-txt-primary-dark" htmlFor="toggler-check">
+        <label
+          className="dark:text-txt-primary-dark mr-1"
+          htmlFor="toggler-check"
+        >
           Night Mode
         </label>
-        <div className="relative mx-2  w-12 h-4 bg-base dark:bg-base-dark rounded-full border-opacity-30 border-2 border-solid border-txt-primary dark:border-txt-primary-dark">
+        <div
+          className={`toggler ${isDark ? "active" : ""}`}
+          onClick={handleClick}
+        ></div>
+        {/* <div className="relative mx-2  w-12 h-4 bg-base dark:bg-base-dark rounded-full border-opacity-30 border-2 border-solid border-txt-primary dark:border-txt-primary-dark">
           <input
             type="checkbox"
             id="toggler-check"
-            className="absolute w-full h-full z-10 opacity-10"
+            className="absolute w-full h-full z-10 opacity-0"
             checked={isDark}
             onChange={handleClick}
           />
           <div className="transition-all w-4 border-primary border-solid border-2 h-full rounded-full bg-txt-base dark:bg-txt-base-dark"></div>
-        </div>
+        </div> */}
       </div>
       <ul className="grid grid-cols-3">
         <li

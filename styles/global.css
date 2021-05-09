@@ -51,6 +51,59 @@ body {
   @apply font-medium;
 }
 
-#toggler-check:checked + div {
-  transform: translateX(1.7rem);
+/* TOGGLER */
+.toggler {
+  @apply bg-base 
+  dark:bg-base-dark 
+ 
+  rounded-full 
+  border-opacity-30 
+  border-2 
+  border-solid 
+  border-txt-primary 
+  dark:border-txt-primary-dark;
+
+  width: 2.5rem;
+  height: 1.5rem;
+  position: relative;
+
+  border: solid 1px;
+}
+
+.toggler::before {
+  @apply bg-txt-base
+  dark:bg-txt-base-dark
+  rounded-full
+  
+  transition-all;
+
+  content: "";
+  width: 1rem;
+  height: 1rem;
+
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+}
+
+.active::before {
+  left: 1.2rem;
+}
+
+/* LOADING ANIMATION */
+.loading-animation {
+  @apply w-8 h-8 border-txt-primary-dark;
+  border-radius: 50%;
+  border: 4px solid;
+  border-left-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
