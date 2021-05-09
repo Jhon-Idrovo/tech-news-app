@@ -30,12 +30,9 @@ export default function Home() {
 
   const updatePosts = async (lcSection) => {
     const firstPosts = await getFirstPosts(lcSection);
-    if (section === lcSection) {
-      console.log("equal");
-    }
     setPosts(firstPosts);
     const remainingPosts = await getRemainingPosts();
-    console.log(posts); //this gives null
+    //use the variable fisrtPosts since react does could not update the state yet
     setPosts([...firstPosts, ...remainingPosts]);
   };
 
