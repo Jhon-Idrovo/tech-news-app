@@ -28,8 +28,8 @@ export default function Home() {
   // the state in batches, so it waits until we update the posts state to set the current section
   // so we cannot use it on this last proccess
 
-  const updatePosts = async (lcSection) => {
-    const firstPosts = await getFirstPosts(lcSection);
+  const updatePosts = async (section) => {
+    const firstPosts = await getFirstPosts(section);
     setPosts(firstPosts);
     const remainingPosts = await getRemainingPosts();
     //use the variable fisrtPosts since react does could not update the state yet
