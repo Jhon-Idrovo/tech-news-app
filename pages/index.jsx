@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 import PostCard from "../components/PostCard";
 import NavBar from "../components/NavBar";
 import Loading from "../components/Loading";
-import { getFirstPosts, getRemainingPosts } from "../lib/news";
-import { data } from "autoprefixer";
-import { unstable_batchedUpdates } from "react-dom";
+import { getFirstPosts, getRemainingPosts, cancelRequest } from "../lib/news";
 
 export default function Home() {
   const [section, setSection] = useState("topstories");
@@ -14,7 +12,10 @@ export default function Home() {
 
   useEffect(() => {
     updatePosts(section);
-  }, []);
+    return () => {
+      cancelRequest();
+    };
+  }, [section]);
 
   //in order to show the news fast to the user, the app does not
   //get all the publications in one go, instead, it only show 20 and then
@@ -39,7 +40,6 @@ export default function Home() {
   const changeSection = (newSec) => {
     setPosts(null);
     setSection(newSec);
-    updatePosts(newSec);
   };
 
   console.log("outside", posts);
