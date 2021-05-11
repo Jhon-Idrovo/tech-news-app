@@ -11,18 +11,19 @@ export default function Home() {
   const [section, setSection] = useState("topstories");
 
   const queryClient = useQueryClient();
+
   const {
     isError,
-    isLoading,
+    //isLoading:loadingInitial,
     data: posts,
     error,
   } = useQuery(section, () => getFirstPosts(section));
-
-  const { isIdle, data: remainingPosts } = useQuery(
-    section,
-    getRemainingPosts,
-    { enabled: !!posts }
+  let sectionContinue = section;
+  const { isLoading: loadingRemaining, data: remainingPosts } = useQuery(
+    sectionContinue,
+    getRemainingPosts
   );
+
   //in order to show the news fast to the user, the app does not
   //get all the publications in one go, instead, it only show 20 and then
   //gets the remaining as a  side process
@@ -54,14 +55,15 @@ export default function Home() {
         ) : (
           <Loading />
         )}
-
-        {!isLoading && !remainingPosts ? (
-          <div>loading more...</div>
-        ) : (
-          remainingPosts.map((post, index) => (
-            <PostCard key={index} {...post} />
-          ))
-        )}
+        <>
+          {loadingRemaining ? (
+            <div>is loading</div>
+          ) : (
+            remainingPosts.map((post, index) => {
+              <PostCard key={index} {...post} />;
+            })
+          )}
+        </>
       </main>
     </>
   );
