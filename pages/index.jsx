@@ -8,14 +8,12 @@ import { getFirstPosts, getRemainingPosts, cancelRequest } from "../lib/news";
 
 export default function Home() {
   const [section, setSection] = useState("topstories");
-  const [posts, setPosts] = useState(null);
+  const [posts, setPosts] = useState({ posts: null, section: "topstories" });
+  const [isSendingRequest, setIsSendingRequest] = useState(false);
 
   useEffect(() => {
-    updatePosts(section);
-    return () => {
-      cancelRequest();
-    };
-  }, [section]);
+    updatePosts(posts.section);
+  }, []);
 
   //in order to show the news fast to the user, the app does not
   //get all the publications in one go, instead, it only show 20 and then
@@ -30,16 +28,17 @@ export default function Home() {
   // so we cannot use it on this last proccess
 
   const updatePosts = async (section) => {
+    setIsSendingRequest(true);
     const firstPosts = await getFirstPosts(section);
-    setPosts(firstPosts);
+    setPosts({ posts: firstPosts, section: section });
     const remainingPosts = await getRemainingPosts();
     //use the variable fisrtPosts since react does could not update the state yet
-    setPosts([...firstPosts, ...remainingPosts]);
+    setPosts({ posts: [...firstPosts, ...remainingPosts], section: section });
   };
 
   const changeSection = (newSec) => {
-    setPosts(null);
-    setSection(newSec);
+    // isSendingRequest ? cancelRequest() : null;
+    setPosts({ posts: null, section: newSec });
   };
 
   console.log("outside", posts);
@@ -49,10 +48,10 @@ export default function Home() {
         <title>Trivia App</title>
       </Head>
 
-      <NavBar section={section} changeSection={changeSection} />
+      <NavBar section={posts.section} changeSection={changeSection} />
       <main>
-        {posts ? (
-          posts.map((post, index) => {
+        {posts.posts ? (
+          posts.posts.map((post, index) => {
             return <PostCard key={index} {...post} />;
           })
         ) : (
