@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "react-query";
 
 import PostCard from "../components/PostCard";
 import NavBar from "../components/NavBar";
@@ -8,13 +9,20 @@ import { getFirstPosts, getRemainingPosts, cancelRequest } from "../lib/news";
 
 export default function Home() {
   const [section, setSection] = useState("topstories");
-  const [posts, setPosts] = useState({ posts: null, section: "topstories" });
-  const [isSendingRequest, setIsSendingRequest] = useState(false);
 
-  useEffect(() => {
-    updatePosts(posts.section);
-  }, []);
+  const queryClient = useQueryClient();
+  const {
+    isError,
+    isLoading,
+    data: posts,
+    error,
+  } = useQuery(section, () => getFirstPosts(section));
 
+  const { isIdle, data: remainingPosts } = useQuery(
+    section,
+    getRemainingPosts,
+    { enabled: !!posts }
+  );
   //in order to show the news fast to the user, the app does not
   //get all the publications in one go, instead, it only show 20 and then
   //gets the remaining as a  side process
@@ -27,35 +35,32 @@ export default function Home() {
   // the state in batches, so it waits until we update the posts state to set the current section
   // so we cannot use it on this last proccess
 
-  const updatePosts = async (section) => {
-    setIsSendingRequest(true);
-    const firstPosts = await getFirstPosts(section);
-    setPosts({ posts: firstPosts, section: section });
-    const remainingPosts = await getRemainingPosts();
-    //use the variable fisrtPosts since react does could not update the state yet
-    setPosts({ posts: [...firstPosts, ...remainingPosts], section: section });
-  };
-
   const changeSection = (newSec) => {
-    // isSendingRequest ? cancelRequest() : null;
-    setPosts({ posts: null, section: newSec });
+    setSection(newSec);
   };
 
-  console.log("outside", posts);
   return (
     <>
       <Head>
         <title>Trivia App</title>
       </Head>
 
-      <NavBar section={posts.section} changeSection={changeSection} />
+      <NavBar section={section} changeSection={changeSection} />
       <main>
-        {posts.posts ? (
-          posts.posts.map((post, index) => {
+        {posts ? (
+          posts.map((post, index) => {
             return <PostCard key={index} {...post} />;
           })
         ) : (
           <Loading />
+        )}
+
+        {!isLoading && !remainingPosts ? (
+          <div>loading more...</div>
+        ) : (
+          remainingPosts.map((post, index) => (
+            <PostCard key={index} {...post} />
+          ))
         )}
       </main>
     </>
