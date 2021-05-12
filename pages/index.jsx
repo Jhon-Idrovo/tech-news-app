@@ -16,11 +16,18 @@ export default function Home() {
     fetchNextPage,
     hasNextPage,
     isFetching,
+    isLoading,
     isError,
     error,
-  } = useInfiniteQuery(section, getPost, {
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-  });
+  } = useInfiniteQuery(
+    section,
+    () => {
+      getPost({ section });
+    },
+    {
+      getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    }
+  );
 
   const changeSection = (newSec) => {
     setSection(newSec);
@@ -34,15 +41,15 @@ export default function Home() {
 
       <NavBar section={section} changeSection={changeSection} />
       <main>
-        {isError ? (
+        {isLoading ? (
+          <Loading />
+        ) : isError ? (
           <div>an error has ocurred{error}</div>
-        ) : posts ? (
-          console.log(post.pages) &&
+        ) : (
+          console.log(posts) &&
           posts.pages.map((post, index) => {
             return <PostCard key={index} {...post} />;
           })
-        ) : (
-          <Loading />
         )}
         <button
           onClick={() => {
