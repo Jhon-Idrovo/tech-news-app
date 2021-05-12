@@ -21,7 +21,7 @@ export default function Home() {
   } = useInfiniteQuery(
     section,
     () => {
-      getPost((section = section));
+      getPost(0, section);
     },
     {
       getNextPageParam: (lastPage, pages) => {
@@ -42,7 +42,7 @@ export default function Home() {
       <NavBar section={section} changeSection={changeSection} />
       <main>
         {posts ? (
-          posts.map((post, index) => {
+          posts.pages.map((post, index) => {
             return <PostCard key={index} {...post} />;
           })
         ) : (
