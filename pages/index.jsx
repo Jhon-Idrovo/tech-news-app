@@ -12,16 +12,16 @@ export default function Home() {
   const queryClient = useQueryClient();
 
   const {
-    isError,
-    isLoading: loadingInitial,
     data: posts,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isError,
     error,
-  } = useQuery(section, () => getFirstPosts(section));
+  } = useInfiniteQuery(section, getPost, {
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+  });
 
-  const { isLoading: loadingRemaining, data: remainingPosts } = useQuery(
-    "remaining",
-    getRemainingPosts
-  );
   const changeSection = (newSec) => {
     setSection(newSec);
   };
@@ -34,23 +34,23 @@ export default function Home() {
 
       <NavBar section={section} changeSection={changeSection} />
       <main>
-        {loadingInitial ? (
-          <Loading />
-        ) : isError ? (
+        {isError ? (
           <div>an error has ocurred{error}</div>
-        ) : (
-          posts.map((post, index) => {
+        ) : posts ? (
+          console.log(post.pages) &&
+          posts.pages.map((post, index) => {
             return <PostCard key={index} {...post} />;
           })
-        )}
-        {loadingRemaining ? (
-          <Loading />
         ) : (
-          console.log(remainingPosts) &&
-          remainingPosts.map((post, index) => {
-            return <PostCard key={index + 20} {...post} />;
-          })
+          <Loading />
         )}
+        <button
+          onClick={() => {
+            fetchNextPage();
+          }}
+        >
+          MORE
+        </button>
       </main>
     </>
   );
