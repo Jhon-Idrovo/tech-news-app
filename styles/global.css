@@ -9,16 +9,6 @@ body {
   overflow-x: hidden;
 }
 
-/* * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  text-decoration: none;
-  color: black;
-  outline: none;
-} */
-
 /* SCROLLBAR */
 /* width */
 ::-webkit-scrollbar {
@@ -39,6 +29,7 @@ body {
   @apply dark:bg-base-dark bg-base;
 }
 
+/* NAV BAR */
 .nav-tab {
   @apply w-min p-2 m-auto cursor-pointer hover:bg-base  dark:hover:bg-base-dark hover:text-txt-base dark:text-txt-base-dark;
 }
@@ -106,4 +97,9 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* UTILS */
+.btn {
+  @apply bg-primary text-txt-primary dark:bg-primary-dark dark:text-txt-primary-dark px-4 py-2;
 }

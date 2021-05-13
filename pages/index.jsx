@@ -12,22 +12,16 @@ export default function Home() {
   const queryClient = useQueryClient();
 
   const {
-    data: posts,
+    data,
     fetchNextPage,
     hasNextPage,
     isFetching,
     isLoading,
     isError,
     error,
-  } = useInfiniteQuery(
-    section,
-    () => {
-      getPost({ section });
-    },
-    {
-      getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
-    }
-  );
+  } = useInfiniteQuery(section, getPost, {
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+  });
 
   const changeSection = (newSec) => {
     setSection(newSec);
@@ -46,18 +40,26 @@ export default function Home() {
         ) : isError ? (
           <div>an error has ocurred{error}</div>
         ) : (
-          console.log(posts) &&
-          posts.pages.map((post, index) => {
-            return <PostCard key={index} {...post} />;
+          data.pages.map((page) => {
+            console.log(page);
+
+            return page.data.map((post, index) => {
+              console.log(post);
+              return <PostCard key={index} {...post} />;
+            });
           })
         )}
-        <button
-          onClick={() => {
-            fetchNextPage();
-          }}
-        >
-          MORE
-        </button>
+
+        {data ? (
+          <button
+            className="btn mx-auto block"
+            onClick={() => {
+              fetchNextPage();
+            }}
+          >
+            {isFetching ? "Loading..." : "Load More"}
+          </button>
+        ) : null}
       </main>
     </>
   );
