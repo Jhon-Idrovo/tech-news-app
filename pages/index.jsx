@@ -52,7 +52,8 @@ export default function Home() {
 
         {data ? (
           <button
-            className="btn mx-auto block"
+            className={`btn mx-auto block`}
+            disabled={isFetching}
             onClick={() => {
               fetchNextPage();
             }}
