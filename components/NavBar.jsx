@@ -23,16 +23,6 @@ function NavBar({ section, changeSection }) {
           className={`toggler ${isDark ? "active" : ""}`}
           onClick={handleClick}
         ></div>
-        {/* <div className="relative mx-2  w-12 h-4 bg-base dark:bg-base-dark rounded-full border-opacity-30 border-2 border-solid border-txt-primary dark:border-txt-primary-dark">
-          <input
-            type="checkbox"
-            id="toggler-check"
-            className="absolute w-full h-full z-10 opacity-0"
-            checked={isDark}
-            onChange={handleClick}
-          />
-          <div className="transition-all w-4 border-primary border-solid border-2 h-full rounded-full bg-txt-base dark:bg-txt-base-dark"></div>
-        </div> */}
       </div>
       <ul className="grid grid-cols-3">
         <li
